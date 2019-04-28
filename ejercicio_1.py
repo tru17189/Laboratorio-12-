@@ -58,6 +58,32 @@ for r in rows_2:
         print('No existe nada con esta descripción')
 
 ###Inciso c###
+print("\nInciso c)")
+dinero = float(input("Con cuanto dinero cuenta?"))
+a = dinero*0.75
+b = dinero*0.25
+speed = float(input("Cuanto es la velocidad minima que necesita?"))
+cur.execute('SELECT "price", (SELECT "price" FROM "printer" WHERE "price" < (%s) limit 1) FROM "PC" GROUP BY "price" ORDER BY "PC"."price" desc',(b,))
+rows_4 = cur.fetchall()
+for r in rows_4:
+    price_1 = float(r[0])
+    price_2 = float(r[1])
+    if price_1 <= a and price_2 <= b:
+        cur.execute('SELECT "speed" FROM "PC" GROUP BY "speed" ORDER BY "speed" asc')
+        rows_5 = cur.fetchall()
+    else:
+        print("No existe nada con esa descripcion")
+        for r in rows_5:
+            speed_1 = float(r[0])
+            if speed_1 <= speed:
+                cur.execute('SELECT "PC"."model", (SELECT "printer"."model" FROM "printer" WHERE "printer"."price"<= (%s)) FROM "PC" WHERE "PC"."price"<= (%s) LIMIT 1', (a,b,))
+                rows_6 = cur.fetchall()
+            else:
+                print("No existe nada con esa descripcion")
+                for r in rows_6:
+                    print('\tPC model: ',r[0])
+                    print ('\tPrinter model: ',r[1])
+        
 
 
 cur.close()
